@@ -4,10 +4,12 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ResidentController;
 use App\Http\Controllers\InfrastrukturController;
 use App\Http\Controllers\YearController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\EducationController;
 use App\Http\Controllers\OccupationController;
 use App\Http\Controllers\InventarisController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\RoomController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -51,7 +53,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/inventaris/cetak', [InventarisController::class, 'printPDF'])->name('inventaris.cetak');
         Route::resource('inventaris', InventarisController::class);
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-        
+        Route::get('/room/cetak', [roomController::class, 'printPDF'])->name('room.cetak');
+        Route::resource('room', RoomController::class);
+        Route::get('/user/cetak', [UserController::class, 'printPDF'])->name('user.cetak');
+        Route::resource('user', UserController::class);
     });
 
 

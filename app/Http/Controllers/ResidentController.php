@@ -66,10 +66,10 @@ class ResidentController extends Controller
     }
 
 
-// ... (method lain di dalam controller)
 
-public function printPDF()
-{
+
+    public function printPDF()
+    {
     // Ambil data yang sama dengan yang Anda gunakan di halaman index
     $residents = Resident::all(); // Sesuaikan cara Anda mengambil data
     $total_jumlah = $residents->sum('jumlah');
@@ -85,5 +85,5 @@ public function printPDF()
 
     // Tampilkan PDF di browser
     return $pdf->stream('laporan-data-warga.pdf');
-}
+    }
 }

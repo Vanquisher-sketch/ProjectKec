@@ -75,8 +75,7 @@
                     <i class="fas fa-regular fa-city"></i>
                     <span>Data Status Pekerjaan</span></a>
             </li>
-            <!-- Divider -->
-            <hr class="sidebar-divider d-none d-md-block">
+            
 
             <!-- Heading -->
             <div class="sidebar-heading">
@@ -91,17 +90,28 @@
                     <span>Data Infrastrukur</span></a>
             </li>
 
-                        <!-- Divider -->
-            <hr class="sidebar-divider d-none d-md-block">
-
             <!-- Heading -->
             <div class="sidebar-heading">
                 Data Barang
             </div> 
+            <li class="nav-item {{ request()->is('room') ? 'active' : '' }}">
+                <a class="nav-link" href="/room">
+                    <i class="fas fa-fw fa-landmark"></i>
+                    <span>Data Ruangan</span></a>
+            </li>
             <li class="nav-item {{ request()->is('inventaris') ? 'active' : '' }}">
                 <a class="nav-link" href="/inventaris">
                     <i class="fas fa-fw fa-landmark"></i>
                     <span>Data Inventori Ruangan</span></a>
+            </li>
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Data Akun
+            </div> 
+            <li class="nav-item {{ request()->is('user') ? 'active' : '' }}">
+                <a class="nav-link" href="/user">
+                    <i class="fas fa-fw fa-landmark"></i>
+                    <span>Account</span></a>
             </li>
             <!-- Sidebar Toggler (Sidebar) -->
             <div class="text-center d-none d-md-inline">
