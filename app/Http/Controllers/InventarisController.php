@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Inventaris;
+use App\Models\Room;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule; // Pastikan Rule di-import
 use PDF;
@@ -99,6 +100,19 @@ class InventarisController extends Controller
 
     // Tampilkan PDF
     return $pdf->stream('data-inventaris-ruangan.pdf');
-}
+    }
+
+    public function showByRuangan(Ruangan $ruangan)
+    {
+        // 1. Ambil semua data inventaris yang memiliki 'ruangan_id' yang sama dengan ID ruangan yang diklik.
+        //    Laravel secara otomatis akan menemukan ruangan berdasarkan ID dari URL.
+        $inventarisItems = Inventaris::where('ruangan_id', $ruangan->id)->get();
+
+        // 2. Kirim data inventaris dan data ruangan ke view
+        return view('inventaris.show_by_ruangan', [
+            'ruangan' => $ruangan,
+            'inventarisItems' => $inventarisItems
+        ]);
+    }
 
 }

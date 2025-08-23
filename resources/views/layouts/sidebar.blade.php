@@ -99,11 +99,35 @@
                     <i class="fas fa-fw fa-landmark"></i>
                     <span>Data Ruangan</span></a>
             </li>
-            <li class="nav-item {{ request()->is('inventaris') ? 'active' : '' }}">
-                <a class="nav-link" href="/inventaris">
-                    <i class="fas fa-fw fa-landmark"></i>
-                    <span>Data Inventori Ruangan</span></a>
-            </li>
+            <!-- Data Inventori Ruangan dengan Submenu Dinamis -->
+<li class="nav-item {{ request()->is('inventaris*') ? 'active' : '' }}">
+    
+    <!-- Link ini untuk membuka/menutup submenu -->
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseInventaris"
+        aria-expanded="true" aria-controls="collapseInventaris">
+        <i class="fas fa-fw fa-landmark"></i>
+        <span>Data Inventori Ruangan</span>
+    </a>
+    
+    <!-- Container untuk submenu -->
+    <div id="collapseInventaris" class="collapse {{ request()->is('inventaris*') ? 'show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+            <h6 class="collapse-header">Pilih Ruangan:</h6>
+            
+            {{-- Mengambil semua data ruangan langsung dari database --}}
+            @php
+                $ruangans = \App\Models\Room::orderBy('name', 'asc')->get();
+            @endphp
+
+            <!-- Menampilkan link untuk setiap ruangan yang ada -->
+            @foreach ($ruangans as $ruangan)
+                <a class="collapse-item" href="/inventaris/ruangan/{{ $ruangan->id }}">
+                   {{ $ruangan->name }}
+                </a>
+            @endforeach
+        </div>
+    </div>
+</li>
             <!-- Heading -->
             <div class="sidebar-heading">
                 Data Akun

@@ -53,10 +53,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/inventaris/cetak', [InventarisController::class, 'printPDF'])->name('inventaris.cetak');
         Route::resource('inventaris', InventarisController::class);
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-        Route::get('/room/cetak', [roomController::class, 'printPDF'])->name('room.cetak');
+        Route::get('/room/cetak', [RoomController::class, 'printPDF'])->name('room.cetak');
         Route::resource('room', RoomController::class);
         Route::get('/user/cetak', [UserController::class, 'printPDF'])->name('user.cetak');
         Route::resource('user', UserController::class);
+       Route::get('/inventaris/ruangan/{ruangan}', [InventarisController::class, 'showByRuangan'])->name('inventaris.byRuangan');
     });
 
 
