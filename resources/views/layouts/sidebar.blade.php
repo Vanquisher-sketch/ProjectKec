@@ -121,7 +121,7 @@
 
             <!-- Menampilkan link untuk setiap ruangan yang ada -->
             @foreach ($ruangans as $ruangan)
-                <a class="collapse-item" href="/inventaris/ruangan/{{ $ruangan->id }}">
+                <a class="collapse-item" href="/inventaris/room/{{ $ruangan->id }}">
                    {{ $ruangan->name }}
                 </a>
             @endforeach

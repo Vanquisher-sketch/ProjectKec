@@ -11,6 +11,8 @@ return new class extends Migration
     {
         Schema::create('inventaris', function (Blueprint $table) {
             $table->id(); // Ini akan menjadi 'No Urut'
+            // INI PERBAIKANNYA
+            $table->foreignId('room_id')->nullable()->constrained('rooms');
             $table->string('nama_barang');
             $table->string('merk_model')->nullable();
             $table->string('bahan')->nullable();

@@ -50,6 +50,9 @@ Route::middleware('auth')->group(function () {
         Route::resource('education', EducationController::class);
         Route::get('/occupation/cetak', [OccupationController::class, 'printPDF'])->name('occupation.cetak');
         Route::resource('occupation', OccupationController::class);
+        Route::get('/inventaris/room/{room}', [InventarisController::class, 'showByRuangan'])->name('inventaris.room');
+        Route::get('/inventaris/room/{room}/create', [InventarisController::class, 'createinroom'])->name('inventaris.createinroom');
+        Route::resource('inventaris/room/{room}', InventarisController::class);
         Route::get('/inventaris/cetak', [InventarisController::class, 'printPDF'])->name('inventaris.cetak');
         Route::resource('inventaris', InventarisController::class);
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -57,7 +60,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('room', RoomController::class);
         Route::get('/user/cetak', [UserController::class, 'printPDF'])->name('user.cetak');
         Route::resource('user', UserController::class);
-       Route::get('/inventaris/ruangan/{ruangan}', [InventarisController::class, 'showByRuangan'])->name('inventaris.byRuangan');
+        
     });
 
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\RoomController;
 use App\Models\Inventaris;
 use App\Models\Room;
 use Illuminate\Http\Request;
@@ -102,17 +103,47 @@ class InventarisController extends Controller
     return $pdf->stream('data-inventaris-ruangan.pdf');
     }
 
-    public function showByRuangan(Ruangan $ruangan)
+    public function showByRuangan(Room $room) // DIUBAH: dari $rooms menjadi $room (tunggal)
     {
-        // 1. Ambil semua data inventaris yang memiliki 'ruangan_id' yang sama dengan ID ruangan yang diklik.
-        //    Laravel secara otomatis akan menemukan ruangan berdasarkan ID dari URL.
-        $inventarisItems = Inventaris::where('ruangan_id', $ruangan->id)->get();
+    // 1. Ambil semua data INVENTARIS yang 'room_id'-nya sama dengan ID room yang diklik.
+    //    (Ganti 'room_id' jika nama kolom foreign key Anda berbeda di tabel inventaris)
+    $inventarisItems = Inventaris::where('room_id', $room->id)->get();
 
-        // 2. Kirim data inventaris dan data ruangan ke view
-        return view('inventaris.show_by_ruangan', [
-            'ruangan' => $ruangan,
-            'inventarisItems' => $inventarisItems
+    // 2. Kirim DUA variabel berbeda ke view:
+    //    - 'ruangan': berisi satu objek room yang sedang dilihat
+    //    - 'inventarisItems': berisi daftar semua barang di room itu
+    return view('pages.inventaris.show_by_ruangan', [
+        'ruangan'        => $room,
+        'inventarisItems' => $inventarisItems
+    ]);
+    }
+    public function createInRoom(Room $room)
+    {
+        return view('pages.inventaris.createinroom', ['ruangan' => $room]);
+    }
+
+    /**
+     * Menyimpan barang baru ke database yang terhubung dengan ruangan.
+     */
+    public function storeInRoom(Request $request, Room $room)
+    {
+        $validatedData = $request->validate([
+            'nama_barang' => 'required|string|max:255',
+            'merk_model' => 'nullable|string',
+            'bahan' => 'nullable|string',
+            'tahun_pembelian' => 'required|integer',
+            'kode_barang' => 'required|string|unique:inventaris,kode_barang',
+            'jumlah' => 'required|integer',
+            'harga_perolehan' => 'required|numeric',
+            'kondisi' => 'required|in:B,KB,RB',
+            'keterangan' => 'nullable|string',
         ]);
+
+        $validatedData['room_id'] = $room->id;
+        Inventaris::create($validatedData);
+
+        return redirect()->route('inventaris.byRuangan', $room->id)
+                         ->with('success', 'Barang berhasil ditambahkan!');
     }
 
 }
