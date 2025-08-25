@@ -134,8 +134,16 @@
             </div> 
             <li class="nav-item {{ request()->is('user') ? 'active' : '' }}">
                 <a class="nav-link" href="/user">
-                    <i class="fas fa-fw fa-landmark"></i>
+                    <i class="fas fa-regular fa-user"></i>
                     <span>Account</span></a>
+            </li>
+            <div class="sidebar-heading">
+                Laporan
+            </div> 
+            <li class="nav-item {{ request()->is('report') ? 'active' : '' }}">
+                <a class="nav-link" href="/report">
+                    <i class="fas fa-regular fa-print"></i>
+                    <span>Lapooran Keseluruhan</span></a>
             </li>
             <!-- Sidebar Toggler (Sidebar) -->
             <div class="text-center d-none d-md-inline">

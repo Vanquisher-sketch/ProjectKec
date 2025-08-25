@@ -146,4 +146,10 @@ class InventarisController extends Controller
                          ->with('success', 'Barang berhasil ditambahkan!');
     }
 
+    public function show(Room $room) // atau public function show($id)
+    {
+        // ... logika untuk menampilkan data room
+        return view('inventaris.room.show', compact('room'));
+    }
+
 }

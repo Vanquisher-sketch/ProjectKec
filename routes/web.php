@@ -35,11 +35,11 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard', function () {
         return view('pages.dashboard');
-    })->middleware('role:Admin,User')->name('dashboard');
+    })->middleware('role:Admin,kecamatan,kelurahan,rw,rt')->name('dashboard');
 
     // Grup untuk route yang hanya bisa diakses Admin
-    Route::middleware('role:Admin')->group(function () {
-        Route::post('/education', [App\Http\Controllers\EducationController::class, 'store'])->name('education.store');
+    Route::middleware('role:Admin,kecamatan')->group(function () {
+        Route::post('/education', [EducationController::class, 'store'])->name('education.store');
         Route::get('/resident/cetak', [ResidentController::class, 'printPDF'])->name('resident.cetak');
         Route::resource('resident', ResidentController::class);
         Route::get('/infrastruktur/cetak', [InfrastrukturController::class, 'printPDF'])->name('infrastruktur.cetak');
@@ -49,10 +49,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/education/cetak', [EducationController::class, 'printPDF'])->name('education.cetak');
         Route::resource('education', EducationController::class);
         Route::get('/occupation/cetak', [OccupationController::class, 'printPDF'])->name('occupation.cetak');
-        Route::resource('occupation', OccupationController::class);
-        Route::get('/inventaris/room/{room}', [InventarisController::class, 'showByRuangan'])->name('inventaris.room');
-        Route::get('/inventaris/room/{room}/create', [InventarisController::class, 'createinroom'])->name('inventaris.createinroom');
-        Route::resource('inventaris/room/{room}', InventarisController::class);
+        Route::resource('occupation',OccupationController::class);// BENAR
+        Route::resource('inventaris/room', InventarisController::class);
         Route::get('/inventaris/cetak', [InventarisController::class, 'printPDF'])->name('inventaris.cetak');
         Route::resource('inventaris', InventarisController::class);
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -62,6 +60,8 @@ Route::middleware('auth')->group(function () {
         Route::resource('user', UserController::class);
         
     });
+
+    //
 
 
 // Tambahkan route ini
