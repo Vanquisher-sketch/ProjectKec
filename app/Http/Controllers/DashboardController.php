@@ -39,15 +39,18 @@ class DashboardController extends Controller
         $labelsPekerjaan = $dataGrafikPekerjaan->pluck('pekerjaan');
         $dataPekerjaan = $dataGrafikPekerjaan->pluck('jumlah');
 
-        // =======================================================
-        // DATA BARU UNTUK GRAFIK STATUS KEPENDUDUKAN
-        // =======================================================
-        $dataGrafikKependudukan = DB::table('residents') // Asumsi nama tabel adalah 'residents'
-            ->select('status_tinggal', 'jumlah') // Asumsi nama kolom adalah 'status_tinggal' dan 'jumlah'
+        // DATA GRAFIK STATUS KEPENDUDUKAN
+        $dataGrafikKependudukan = DB::table('residents')
+            ->select('status_tinggal', 'jumlah')
             ->get();
-
         $labelsKependudukan = $dataGrafikKependudukan->pluck('status_tinggal');
         $dataKependudukan = $dataGrafikKependudukan->pluck('jumlah');
+
+        // =======================================================
+        // DATA BARU UNTUK STAT CARD (KPI)
+        // =======================================================
+        // Ganti 'years' dengan nama tabel utama data warga Anda jika berbeda
+        $totalWarga = DB::table('years')->count();
 
         // =======================================================
         // KIRIM SEMUA DATA KE VIEW
@@ -56,7 +59,8 @@ class DashboardController extends Controller
             'labelsUsia', 'dataUsia',
             'labelsPendidikan', 'dataPendidikan',
             'labelsPekerjaan', 'dataPekerjaan',
-            'labelsKependudukan', 'dataKependudukan' // <-- Variabel baru
+            'labelsKependudukan', 'dataKependudukan',
+            'totalWarga' // <-- Variabel baru ditambahkan di sini
         ));
     }
 }
