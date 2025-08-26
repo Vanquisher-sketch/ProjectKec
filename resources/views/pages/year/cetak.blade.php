@@ -75,11 +75,11 @@
         </thead>
         <tbody>
             @if (count($years) > 0)
-                @foreach ($years as $res)
+                @foreach ($years as $y)
                 <tr>
                     <td style="text-align: center;">{{ $loop->iteration }}</td>
-                    <td>{{ $res->tahun_lahir }}</td>
-                    <td>{{ $res->jumlah }} Warga</td>
+                    <td>{{ $y->tahun_lahir }}</td>
+                    <td>{{ $y->jumlah }} Warga</td>
                 </tr>
                 @endforeach
                 {{-- Baris untuk menampilkan total --}}

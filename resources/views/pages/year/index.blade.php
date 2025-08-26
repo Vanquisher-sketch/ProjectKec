@@ -39,19 +39,19 @@
                         </tbody>
                     @else
                     <tbody>
-                        @foreach ($years as $res)
+                        @foreach ($years as $y)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
-                            <td>{{ $res->tahun_lahir }}</td>
-                            <td>{{ $res->jumlah}}</td>
+                            <td>{{ $y->tahun_lahir }}</td>
+                            <td>{{ $y->jumlah}}</td>
                             <td>
 
                                 <div class="d-flex">
                                     {{-- GANTI TOMBOL LAMA ANDA DENGAN INI --}}
-                                    <a href="{{ route('year.edit', $res->id) }}" class="d-inline-block mr-2 btn btn-sm btn-warning">
+                                    <a href="{{ route('year.edit', $y->id) }}" class="d-inline-block mr-2 btn btn-sm btn-warning">
                                         <i class="fas fa-pen"></i>
                                     </a>
-                                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#confirmationDelete-{{ $res->id }}">
+                                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#confirmationDelete-{{ $y->id }}">
                                         <i class="fas fa-eraser"></i>
                                     </button>
                                 </div>

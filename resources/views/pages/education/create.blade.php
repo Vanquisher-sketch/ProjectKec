@@ -18,7 +18,7 @@
                             <label for="sekolah">Status Sekolah</label>
                             <select name="sekolah" id="sekolah" class="form-control @error('sekolah') is-invalid @enderror">
                                 <option value="" disabled selected>-- Pilih Status --</option>
-                                <option value="masuk sekolah" {{ old('sekolah') == 'sekolah' ? 'selected' : '' }}>Sekolah</option>
+                                <option value="masih sekolah" {{ old('sekolah') == 'masih sekolah' ? 'selected' : '' }}>Sekolah</option>
                                 <option value="tidak sekolah" {{ old('sekolah') == 'tidak sekolah' ? 'selected' : '' }}>Tidak Sekolah</option>
                                 <option value="putus sekolah" {{ old('sekolah') == 'putus sekolah' ? 'selected' : '' }}>Putus Sekolah</option>
                             </select>

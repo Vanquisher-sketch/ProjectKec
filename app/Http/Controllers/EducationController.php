@@ -13,9 +13,9 @@ class EducationController extends Controller
     {
         $educations = Education::all();
 
-        return view('pages.education.index', [
-            'educations' => $educations,
-        ]);
+        $total_jumlah = Education::sum('jumlah');
+
+        return view('pages.education.index', compact('educations', 'total_jumlah'));
     }
 
     public function create()
@@ -47,7 +47,7 @@ class EducationController extends Controller
     public function update(Request $request, $id)
     {
             $validatedData = $request->validate([
-            'sekolah'         =>['required', Rule::in(['sekolah','tidak sekolah','putus sekolah'])],  
+            'sekolah'         =>['required', Rule::in(['masih sekolah','tidak sekolah','putus sekolah'])],  
             'jumlah'          =>['required','max:100'],
         ]);
 

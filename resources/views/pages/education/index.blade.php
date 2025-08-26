@@ -55,6 +55,9 @@
                             @endforelse
                         </tbody>
                     </table>
+                    <div class="d-flex justify-content-end">
+                        <strong>Total Data: {{ $total_jumlah }} Warga</strong>
+                    </div>
                 </div>
             </div>
         </div>

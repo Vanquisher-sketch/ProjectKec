@@ -13,9 +13,9 @@ class YearController extends Controller
     {
         $years = Year::all();
 
-        return view('pages.year.index', [
-            'years' => $years,
-        ]);
+        $total_jumlah = Year::sum();
+
+        return view('pages.year.index', compact('years', 'jumlah'));
     }
 
     public function create()
