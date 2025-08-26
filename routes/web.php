@@ -10,6 +10,7 @@ use App\Http\Controllers\OccupationController;
 use App\Http\Controllers\InventarisController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RoomController;
+use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -58,6 +59,8 @@ Route::middleware('auth')->group(function () {
         Route::resource('room', RoomController::class);
         Route::get('/user/cetak', [UserController::class, 'printPDF'])->name('user.cetak');
         Route::resource('user', UserController::class);
+        Route::get('/report/cetak', [ReportController::class, 'printPDF'])->name('report.cetak');
+        Route::resource('report', ReportController::class);
         
     });
 
