@@ -61,6 +61,11 @@ Route::middleware('auth')->group(function () {
         Route::resource('user', UserController::class);
         Route::get('/report/cetak', [ReportController::class, 'printPDF'])->name('report.cetak');
         Route::resource('report', ReportController::class);
+        Route::get('/chart/kependudukan', [DashboardController::class, 'chartKependudukan'])->name('chart.kependudukan');
+        Route::get('/chart/tahun-kelahiran', [DashboardController::class, 'chartTahunKelahiran'])->name('chart.tahun_kelahiran');
+        Route::get('/chart/pendidikan', [DashboardController::class, 'chartPendidikan'])->name('chart.pendidikan');
+        Route::get('/chart/pekerjaan', [DashboardController::class, 'chartPekerjaan'])->name('chart.pekerjaan');
+    
         
     });
 
