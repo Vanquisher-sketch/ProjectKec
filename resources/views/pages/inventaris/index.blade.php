@@ -72,8 +72,7 @@
                             <td>
                                 <div class="d-flex justify-content-center">
                                     {{-- ====================================================================== --}}
-                                    {{-- KODE YANG BENAR UNTUK SEMUA TOMBOL ADA DI SINI --}}
-                                    {{-- Perhatikan penulisan ['inventari' => $item->id] yang benar --}}
+                                    {{-- PERBAIKAN FINAL: Menggunakan parameter standar Laravel 'inventaris' (pakai 's') --}}
                                     {{-- ====================================================================== --}}
                                     
                                     {{-- Tombol Edit --}}
@@ -88,7 +87,7 @@
                                         <button class="btn btn-sm btn-danger mr-1" title="Hapus"><i class="fas fa-eraser"></i></button>
                                     </form>
 
-                                    {{-- Tombol Pindah Ruangan (mengarah ke halaman edit) --}}
+                                    {{-- Tombol Pindah Ruangan (mengarahkan ke halaman edit) --}}
                                     <a href="{{ route('inventaris.edit', ['inventaris' => $item->id]) }}" class="btn btn-sm btn-success" title="Pindah Ruangan">
                                         <i class="fas fa-exchange-alt"></i>
                                     </a>
