@@ -25,38 +25,6 @@
         </div>
     </div>
 
-    <!-- FORM FILTER RUANGAN -->
-    <!--div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Filter Berdasarkan Ruangan</h6>
-        </div>
-        <div class="card-body">
-            <form action="{{ route('inventaris.index') }}" method="GET">
-                <div class="row align-items-end">
-                    <div class="col-md-4">
-                        <div class="form-group mb-0">
-                            <label for="room_id">Pilih Ruangan</label>
-                            <select name="room_id" id="room_id" class="form-control">
-                                <option value="">-- Tampilkan Semua --</option>
-                                @foreach ($daftarRuangan as $ruangan)
-                                    <option value="{{ $ruangan->id }}" {{ $selectedRuanganId == $ruangan->id ? 'selected' : '' }}>
-                                        {{ $ruangan->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="form-group mb-0">
-                            <button type="submit" class="btn btn-primary">Filter</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-    <!-- END FORM FILTER RUANGAN -->
-
     <!-- TABEL DATA -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
@@ -65,9 +33,6 @@
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
-                    {{-- ====================================================================== --}}
-                    {{-- BAGIAN HEADER TABEL DISESUAIKAN DENGAN GAMBAR --}}
-                    {{-- ====================================================================== --}}
                     <thead>
                         <tr>
                             <th rowspan="2" class="align-middle text-center">No Urut</th>
@@ -88,7 +53,6 @@
                             <th class="text-center">Rusak Berat (RB)</th>
                         </tr>
                     </thead>
-                    {{-- ====================================================================== --}}
                     
                     <tbody>
                         @forelse ($daftarBarang as $item)
@@ -101,24 +65,31 @@
                             <td class="text-center">{{ $item->kode_barang }}</td>
                             <td class="text-center">{{ $item->jumlah }}</td>
                             <td class="text-end">{{ number_format($item->harga_perolehan, 0, ',', '.') }}</td>
-
-                            {{-- Menampilkan kondisi barang di kolom yang sesuai --}}
                             <td class="text-center">@if($item->kondisi == 'B') ✓ @endif</td>
                             <td class="text-center">@if($item->kondisi == 'KB') ✓ @endif</td>
                             <td class="text-center">@if($item->kondisi == 'RB') ✓ @endif</td>
-
                             <td>{{ $item->keterangan }}</td>
                             <td>
                                 <div class="d-flex justify-content-center">
-                                    <a href="{{ route('inventaris.edit', $item->id) }}" class="btn btn-sm btn-warning mr-1" title="Edit">
+                                    {{-- ====================================================================== --}}
+                                    {{-- KODE YANG BENAR UNTUK SEMUA TOMBOL ADA DI SINI --}}
+                                    {{-- Perhatikan penulisan ['inventari' => $item->id] yang benar --}}
+                                    {{-- ====================================================================== --}}
+                                    
+                                    {{-- Tombol Edit --}}
+                                    <a href="{{ route('inventaris.edit', ['inventaris' => $item->id]) }}" class="btn btn-sm btn-warning mr-1" title="Edit">
                                         <i class="fas fa-pen"></i>
                                     </a>
-                                    <form action="{{ route('inventaris.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                                    
+                                    {{-- Tombol Hapus --}}
+                                    <form action="{{ route('inventaris.destroy', ['inventaris' => $item->id]) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
                                         @csrf
                                         @method('DELETE')
                                         <button class="btn btn-sm btn-danger mr-1" title="Hapus"><i class="fas fa-eraser"></i></button>
                                     </form>
-                                    <a href="{{ route('inventaris.edit', $item->id) }}" class="btn btn-sm btn-success mr-1" title="Edit">
+
+                                    {{-- Tombol Pindah Ruangan (mengarah ke halaman edit) --}}
+                                    <a href="{{ route('inventaris.edit', ['inventaris' => $item->id]) }}" class="btn btn-sm btn-success" title="Pindah Ruangan">
                                         <i class="fas fa-exchange-alt"></i>
                                     </a>
                                 </div>
@@ -126,7 +97,6 @@
                         </tr>
                         @empty
                         <tr>
-                            {{-- Colspan disesuaikan menjadi 13 sesuai jumlah kolom --}}
                             <td colspan="13" class="text-center">Data tidak ditemukan.</td>
                         </tr>
                         @endforelse
