@@ -32,7 +32,7 @@
 
 <div class="container">
     {{-- BARIS UNTUK STAT CARD (KPI) --}}
-    <!--div class="row mb-4">
+    <div class="row mb-4">
         <div class="col-md-4 mb-4">
             <div class="card border-left-primary kpi-card">
                 <div class="card-body">
@@ -49,7 +49,7 @@
             </div>
         </div>
         {{-- Anda bisa tambahkan Stat Card lain di sini jika ada datanya --}}
-    </div-->
+    </div>
 
     {{-- BARIS UNTUK GRAFIK --}}
     <div class="row">

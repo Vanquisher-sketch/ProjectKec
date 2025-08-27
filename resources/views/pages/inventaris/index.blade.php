@@ -110,12 +110,17 @@
                             <td>{{ $item->keterangan }}</td>
                             <td>
                                 <div class="d-flex justify-content-center">
-                                    <a href="{{ route('inventaris.edit', $item->id) }}" class="btn btn-sm btn-warning mr-1" title="Edit"><i class="fas fa-pen"></i></a>
+                                    <a href="{{ route('inventaris.edit', $item->id) }}" class="btn btn-sm btn-warning mr-1" title="Edit">
+                                        <i class="fas fa-pen"></i>
+                                    </a>
                                     <form action="{{ route('inventaris.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button class="btn btn-sm btn-danger" title="Hapus"><i class="fas fa-eraser"></i></button>
+                                        <button class="btn btn-sm btn-danger mr-1" title="Hapus"><i class="fas fa-eraser"></i></button>
                                     </form>
+                                    <a href="{{ route('inventaris.edit', $item->id) }}" class="btn btn-sm btn-success mr-1" title="Edit">
+                                        <i class="fas fa-exchange-alt"></i>
+                                    </a>
                                 </div>
                             </td>
                         </tr>
