@@ -34,7 +34,7 @@
         <div class="sidebar-brand-icon">
             <img src="{{ asset('img/tsk.png') }}" alt="Logo" style="width: 40px; border-radius: 60%;">
         </div>
-        <div class="sidebar-brand-text mx-3">SIMDAWANI</div>
+        <div class="sidebar-brand-text mx-3">SIDIUK</div>
     </a>
 
     <!-- Divider -->

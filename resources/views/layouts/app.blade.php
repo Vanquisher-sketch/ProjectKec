@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SIMDAWANI</title>
+    <title>SIDIUK</title>
 
     <link rel="icon" href="{{ asset('img/tsk.png') }}" type="image/png">
     <link href="{{ asset('template/vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
