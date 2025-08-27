@@ -50,10 +50,22 @@ Route::middleware('auth')->group(function () {
         Route::get('/education/cetak', [EducationController::class, 'printPDF'])->name('education.cetak');
         Route::resource('education', EducationController::class);
         Route::get('/occupation/cetak', [OccupationController::class, 'printPDF'])->name('occupation.cetak');
-        Route::resource('occupation',OccupationController::class);// BENAR
-        Route::resource('inventaris/room', InventarisController::class);
+        Route::resource('occupation',OccupationController::class);
+        
+        // --- BAGIAN INVENTARIS YANG DIPERBAIKI ---
+        
+        // [SALAH] Baris ini dihapus karena tidak sesuai standar.
+        // Route::resource('inventaris/room', InventarisController::class); 
+
+        // [BENAR] Tambahkan route ini untuk menampilkan inventaris berdasarkan ruangan.
+        // URL-nya akan menjadi /inventaris/room/{id_ruangan}
+        Route::get('/inventaris/room/{room}', [InventarisController::class, 'showByRoom'])->name('inventaris.showByRoom');
+
         Route::get('/inventaris/cetak', [InventarisController::class, 'printPDF'])->name('inventaris.cetak');
-        Route::resource('inventaris', InventarisController::class);
+        Route::resource('inventaris', InventarisController::class); // Ini adalah route resource utama untuk inventaris (CRUD)
+
+        // --- AKHIR BAGIAN INVENTARIS ---
+
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('/room/cetak', [RoomController::class, 'printPDF'])->name('room.cetak');
         Route::resource('room', RoomController::class);
@@ -66,12 +78,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/chart/pendidikan', [DashboardController::class, 'chartPendidikan'])->name('chart.pendidikan');
         Route::get('/chart/pekerjaan', [DashboardController::class, 'chartPekerjaan'])->name('chart.pekerjaan');
     
-        
+    
     });
-
-    //
-
-
-// Tambahkan route ini
 
 });

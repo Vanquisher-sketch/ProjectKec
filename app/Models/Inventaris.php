@@ -1,7 +1,5 @@
 <?php
 
-// app/Models/Inventaris.php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,10 +9,7 @@ class Inventaris extends Model
 {
     use HasFactory;
 
-    protected $table = 'inventaris'; // Nama tabel di database
-
-    protected $guard = [];
-
+    // Properti $fillable Anda mungkin sudah ada di sini
     protected $fillable = [
         'nama_barang',
         'merk_model',
@@ -25,5 +20,19 @@ class Inventaris extends Model
         'harga_perolehan',
         'kondisi',
         'keterangan',
+        'room_id',
     ];
+
+    // ======================================================
+    // TAMBAHKAN FUNGSI INI
+    // ======================================================
+    /**
+     * Mendefinisikan relasi bahwa satu Inventaris "milik" satu Ruangan.
+     */
+    public function room()
+    {
+        // Laravel akan otomatis mencari foreign key 'room_id'
+        return $this->belongsTo(Room::class);
+    }
+    // ======================================================
 }

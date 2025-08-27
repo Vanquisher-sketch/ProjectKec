@@ -2,28 +2,64 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\RoomController;
 use App\Models\Inventaris;
 use App\Models\Room;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule; // Pastikan Rule di-import
+use Illuminate\Validation\Rule;
 use PDF;
 
 class InventarisController extends Controller
 {
-    public function index()
+    /**
+     * FUNGSI UTAMA: Menampilkan daftar inventaris.
+     */
+    public function index(Request $request)
     {
-        $daftarBarang = Inventaris::all();
-        return view('pages.inventaris.index', ['daftarBarang' => $daftarBarang]);
+        $daftarRuangan = Room::orderBy('name', 'asc')->get();
+        $queryInventaris = Inventaris::query()->with('room');
+        $selectedRuanganId = $request->input('room_id');
+        $ruanganTerpilih = null;
+
+        if ($selectedRuanganId) {
+            $queryInventaris->where('room_id', $selectedRuanganId);
+            $ruanganTerpilih = Room::find($selectedRuanganId);
+        }
+
+        $daftarBarang = $queryInventaris->get();
+
+        return view('pages.inventaris.index', [
+            'daftarRuangan'  => $daftarRuangan,
+            'daftarBarang'   => $daftarBarang,
+            'ruanganTerpilih'=> $ruanganTerpilih,
+            'selectedRuanganId' => $selectedRuanganId
+        ]);
     }
 
-    public function create()
+    /**
+     * Menampilkan form untuk membuat data inventaris baru.
+     */
+    public function create(Request $request)
     {
-        return view('pages.inventaris.create');
+        $daftarRuangan = Room::orderBy('name', 'asc')->get();
+        $selectedRoomId = $request->input('room_id');
+
+        return view('pages.inventaris.create', [
+            'daftarRuangan' => $daftarRuangan,
+            'selectedRoomId' => $selectedRoomId
+        ]);
     }
 
+    /**
+     * Menyimpan data inventaris baru ke database.
+     */
     public function store(Request $request)
     {
+        // ===================================================================
+        // Baris debugging di bawah ini sudah dihapus/dikomentari.
+        // ===================================================================
+        // dd($request->all());
+        // ===================================================================
+
         $validatedData = $request->validate([
             'nama_barang'     => 'required|string|max:255',
             'merk_model'      => 'nullable|string|max:255',
@@ -34,27 +70,29 @@ class InventarisController extends Controller
             'harga_perolehan' => 'required|numeric|min:0',
             'kondisi'         => 'required|in:B,KB,RB',
             'keterangan'      => 'nullable|string',
+            'room_id'         => 'required|exists:rooms,id'
         ]);
 
         Inventaris::create($validatedData);
 
-        return redirect()->route('inventaris.index')
+        return redirect()->route('inventaris.index', ['room_id' => $request->room_id])
                          ->with('success', 'Data inventaris baru berhasil ditambahkan!');
     }
 
     /**
-     * PERBAIKAN 1: Menggunakan Route-Model Binding.
-     * Laravel akan otomatis mencari data Inventaris berdasarkan ID di URL.
+     * Menampilkan form untuk mengedit data inventaris.
      */
     public function edit(Inventaris $inventari)
     {
+        $daftarRuangan = Room::orderBy('name', 'asc')->get();
         return view('pages.inventaris.edit', [
             'inventaris' => $inventari,
+            'daftarRuangan' => $daftarRuangan,
         ]);
     }
 
     /**
-     * PERBAIKAN 2: Menggunakan Route-Model Binding dan memperbaiki validasi 'unique'.
+     * Mengupdate data inventaris di database.
      */
     public function update(Request $request, Inventaris $inventari)
     {
@@ -63,93 +101,57 @@ class InventarisController extends Controller
             'merk_model'      => 'nullable|string|max:255',
             'bahan'           => 'nullable|string|max:100',
             'tahun_pembelian' => 'required|integer|digits:4|min:1900|max:' . date('Y'),
-            // Aturan 'unique' diupdate agar mengabaikan data yang sedang diedit
             'kode_barang'     => ['required', 'string', 'max:50', Rule::unique('inventaris')->ignore($inventari->id)],
             'jumlah'          => 'required|integer|min:1',
             'harga_perolehan' => 'required|numeric|min:0',
             'kondisi'         => 'required|in:B,KB,RB',
             'keterangan'      => 'nullable|string',
+            'room_id'         => 'required|exists:rooms,id'
         ]);
 
         $inventari->update($validatedData);
 
-        return redirect()->route('inventaris.index')->with('success', 'Berhasil mengubah data');
+        return redirect()->route('inventaris.index', ['room_id' => $request->room_id])
+                         ->with('success', 'Berhasil mengubah data');
     }
-    
+
     /**
-     * PERBAIKAN 3: Menggunakan Route-Model Binding.
+     * Menghapus data inventaris dari database.
      */
     public function destroy(Inventaris $inventari)
     {
+        $roomId = $inventari->room_id;
         $inventari->delete();
-        return redirect()->route('inventaris.index')->with('success', 'Berhasil menghapus data');
-    }
-    public function printPDF() // atau cetakPDF()
-{
-    // Ambil data
-    $daftarBarang = Inventaris::all();
-    $total_jumlah = $daftarBarang->sum('jumlah');
-
-    // Muat view PDF
-    $pdf = PDF::loadView('pages.inventaris.cetak', [
-        'daftarBarang' => $daftarBarang, // <-- UBAH DI SINI
-        'total_jumlah' => $total_jumlah
-    ]);
-
-    // Atur kertas
-    $pdf->setPaper('A4', 'landscape');
-
-    // Tampilkan PDF
-    return $pdf->stream('data-inventaris-ruangan.pdf');
-    }
-
-    public function showByRuangan(Room $room) // DIUBAH: dari $rooms menjadi $room (tunggal)
-    {
-    // 1. Ambil semua data INVENTARIS yang 'room_id'-nya sama dengan ID room yang diklik.
-    //    (Ganti 'room_id' jika nama kolom foreign key Anda berbeda di tabel inventaris)
-    $inventarisItems = Inventaris::where('room_id', $room->id)->get();
-
-    // 2. Kirim DUA variabel berbeda ke view:
-    //    - 'ruangan': berisi satu objek room yang sedang dilihat
-    //    - 'inventarisItems': berisi daftar semua barang di room itu
-    return view('pages.inventaris.show_by_ruangan', [
-        'ruangan'        => $room,
-        'inventarisItems' => $inventarisItems
-    ]);
-    }
-    public function createInRoom(Room $room)
-    {
-        return view('pages.inventaris.createinroom', ['ruangan' => $room]);
+        return redirect()->route('inventaris.index', ['room_id' => $roomId])
+                         ->with('success', 'Berhasil menghapus data');
     }
 
     /**
-     * Menyimpan barang baru ke database yang terhubung dengan ruangan.
+     * Membuat file PDF dari data inventaris.
      */
-    public function storeInRoom(Request $request, Room $room)
+    public function printPDF(Request $request)
     {
-        $validatedData = $request->validate([
-            'nama_barang' => 'required|string|max:255',
-            'merk_model' => 'nullable|string',
-            'bahan' => 'nullable|string',
-            'tahun_pembelian' => 'required|integer',
-            'kode_barang' => 'required|string|unique:inventaris,kode_barang',
-            'jumlah' => 'required|integer',
-            'harga_perolehan' => 'required|numeric',
-            'kondisi' => 'required|in:B,KB,RB',
-            'keterangan' => 'nullable|string',
+        $queryInventaris = Inventaris::query();
+        $namaRuangan = 'Semua Ruangan';
+
+        if ($request->has('ruangan_id') && $request->ruangan_id) {
+            $queryInventaris->where('room_id', $request->ruangan_id);
+            $ruangan = Room::find($request->ruangan_id);
+            if($ruangan) {
+                $namaRuangan = $ruangan->name;
+            }
+        }
+
+        $daftarBarang = $queryInventaris->get();
+        $total_jumlah = $daftarBarang->sum('jumlah');
+
+        $pdf = PDF::loadView('pages.inventaris.cetak', [
+            'daftarBarang' => $daftarBarang,
+            'total_jumlah' => $total_jumlah,
+            'namaRuangan'  => $namaRuangan
         ]);
 
-        $validatedData['room_id'] = $room->id;
-        Inventaris::create($validatedData);
-
-        return redirect()->route('inventaris.byRuangan', $room->id)
-                         ->with('success', 'Barang berhasil ditambahkan!');
+        $pdf->setPaper('A4', 'landscape');
+        return $pdf->stream('data-inventaris-ruangan-'.$namaRuangan.'.pdf');
     }
-
-    public function show(Room $room) // atau public function show($id)
-    {
-        // ... logika untuk menampilkan data room
-        return view('inventaris.room.show', compact('room'));
-    }
-
 }

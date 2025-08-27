@@ -1,11 +1,13 @@
 @extends('layouts.app')
 
+@section('title', 'Tambah Data Inventaris')
+
 @section('content')
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Tambah Data Inventaris</h1>
-        {{-- Tombol untuk kembali ke halaman index --}}
-        <a href="{{ route('inventaris.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
+        {{-- Tombol untuk kembali ke halaman sebelumnya --}}
+        <a href="{{ url()->previous() }}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
             <i class="fas fa-arrow-left fa-sm text-white-50"></i> Kembali
         </a>
     </div>
@@ -21,6 +23,30 @@
                     <form action="{{ route('inventaris.store') }}" method="POST">
                         @csrf
 
+                        {{-- ====================================================================== --}}
+                        {{-- PERBAIKAN: Mengembalikan Dropdown "Pilih Ruangan" --}}
+                        {{-- ====================================================================== --}}
+                        <div class="form-group">
+                            <label for="room_id">Pilih Ruangan</label>
+                            <select class="form-control @error('room_id') is-invalid @enderror" id="room_id" name="room_id">
+                                <option value="">-- Pilih Ruangan --</option>
+                                {{-- Loop untuk menampilkan semua ruangan yang ada --}}
+                                @foreach ($daftarRuangan as $ruangan)
+                                    {{-- 
+                                        Logika ini akan otomatis memilih ruangan yang benar jika ID-nya
+                                        dikirim lewat URL, atau jika ada error validasi.
+                                    --}}
+                                    <option value="{{ $ruangan->id }}" {{ old('room_id', $selectedRoomId) == $ruangan->id ? 'selected' : '' }}>
+                                        {{ $ruangan->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('room_id')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        {{-- ====================================================================== --}}
+                        
                         <div class="form-group">
                             <label for="nama_barang">Nama Barang/Jenis Barang</label>
                             <input type="text" class="form-control @error('nama_barang') is-invalid @enderror" id="nama_barang" name="nama_barang" value="{{ old('nama_barang') }}" placeholder="Contoh: Meja Kayu...">
@@ -45,7 +71,6 @@
                             @enderror
                         </div>
 
-                        {{-- Menggunakan row untuk menata field berdampingan --}}
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -91,7 +116,7 @@
                         <div class="form-group">
                             <label for="kondisi">Kondisi Barang</label>
                             <select class="form-control @error('kondisi') is-invalid @enderror" id="kondisi" name="kondisi">
-                                <option value="" disabled selected>-- Pilih Kondisi --</option>
+                                <option value="">-- Pilih Kondisi --</option>
                                 <option value="B" {{ old('kondisi') == 'B' ? 'selected' : '' }}>Baik (B)</option>
                                 <option value="KB" {{ old('kondisi') == 'KB' ? 'selected' : '' }}>Kurang Baik (KB)</option>
                                 <option value="RB" {{ old('kondisi') == 'RB' ? 'selected' : '' }}>Rusak Berat (RB)</option>
