@@ -51,21 +51,18 @@ Route::middleware('auth')->group(function () {
         Route::resource('education', EducationController::class);
         Route::get('/occupation/cetak', [OccupationController::class, 'printPDF'])->name('occupation.cetak');
         Route::resource('occupation',OccupationController::class);
-        
-        // --- BAGIAN INVENTARIS YANG DIPERBAIKI ---
-        
-        // [SALAH] Baris ini dihapus karena tidak sesuai standar.
-        // Route::resource('inventaris/room', InventarisController::class); 
 
-        // [BENAR] Tambahkan route ini untuk menampilkan inventaris berdasarkan ruangan.
-        // URL-nya akan menjadi /inventaris/room/{id_ruangan}
+        // --- BAGIAN INVENTARIS (SUDAH DIPERBAIKI) ---
+
+        // Route untuk menampilkan inventaris berdasarkan ruangan.
         Route::get('/inventaris/room/{room}', [InventarisController::class, 'showByRoom'])->name('inventaris.showByRoom');
-
-        Route::get('/inventaris/cetak', [InventarisController::class, 'printPDF'])->name('inventaris.cetak');
-        Route::resource('inventaris', InventarisController::class); // Ini adalah route resource utama untuk inventaris (CRUD)
-
-        // --- AKHIR BAGIAN INVENTARIS ---
-
+        
+        // Route untuk mencetak PDF.
+        Route::get('/inventaris/pdf', [InventarisController::class, 'exportPDF'])->name('inventaris.pdf');
+        // Tambahkan route ini untuk menangani logika pindah ruangan
+        Route::patch('/inventaris/{item}/pindah', [InventarisController::class, 'pindahRuangan'])->name('inventaris.pindah');
+        Route::resource('inventaris', InventarisController::class);
+       
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('/room/cetak', [RoomController::class, 'printPDF'])->name('room.cetak');
         Route::resource('room', RoomController::class);

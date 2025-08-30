@@ -58,13 +58,13 @@ class ReportController extends Controller
         // 2. Data Tahun Kelahiran
         // Diasumsikan Anda memiliki kolom 'tanggal_lahir' di tabel warga
         $years = Year::query()
-            ->select(DB::raw('YEAR(tahun_lahir) as tahun_lahir'), DB::raw('COUNT(*) as jumlah'))
-            ->whereNotNull('tahun_lahir')
-            ->groupBy('tahun_lahir')
-            ->orderBy('tahun_lahir', 'desc')
-            ->get();
-        $total_years = $years->sum('jumlah');
+        ->select(DB::raw('YEAR(tahun_lahir) as tahun_lahir'), DB::raw('COUNT(*) as jumlah')) // Ganti alias agar tidak ambigu
+        ->whereNotNull('tahun_lahir')
+        ->groupBy('tahun_lahir') // Group by dengan alias baru
+        ->orderBy('tahun_lahir', 'desc') // Order by dengan alias baru
+        ->get();
 
+        $total_years = $years->sum('jumlah');
         // 3. Data Pekerjaan
         $occupations = Occupation::query()
             ->select('pekerjaan', DB::raw('COUNT(*) as jumlah'))

@@ -58,7 +58,6 @@
                             <th>No</th>
                             <th>Tahun Kelahiran</th>
                             <th>Jumlah</th>
-                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -67,14 +66,14 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $y->tahun_lahir }}</td>
-                            <td>{{ $y->jumlah }}</td>
+                            <td>{{ $y->jumlah}}</td>
                             {{-- PERBAIKAN: Menambahkan <td> kosong untuk kolom Aksi --}}
                             <td>
                                 </td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="4" class="text-center">
+                            <td colspan="3" class="text-center">
                                 <p class="pt-3">Tidak Ada Data</p>
                             </td>
                         </tr>
