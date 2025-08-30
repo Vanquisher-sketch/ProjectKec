@@ -18,19 +18,14 @@ use Illuminate\Support\Facades\Auth;
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
-|
-| Di sini Anda mendaftarkan semua route untuk aplikasi. Route ini
-| dimuat oleh RouteServiceProvider dan semuanya akan
-| ditugaskan ke grup middleware "web".
-|
 */
 
-// Halaman utama, mengarahkan berdasarkan status login
+// Halaman utama
 Route::get('/', function () {
     return Auth::check() ? redirect()->route('dashboard') : redirect()->route('login');
 });
 
-// Grup untuk route yang hanya bisa diakses oleh tamu (belum login)
+// Route untuk Tamu
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'login'])->name('login');
     Route::post('/login', [AuthController::class, 'authenticate']);
@@ -38,69 +33,69 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
 });
 
-// Grup untuk semua route yang memerlukan login
+// Grup untuk semua yang sudah login
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-    // Dashboard dapat diakses oleh semua peran yang sudah login
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // --- GRUP UNTUK MENU KEPENDUDUKAN ---
-    // Aturan: SUPERADMIN, KECAMATAN, dan RT memiliki akses penuh (CRUD).
+    // --- GRUP MENU KEPENDUDUKAN ---
+    // Aturan: Semua peran terkait (termasuk RT) bisa MELIHAT data
+    Route::middleware('role:SUPERADMIN,KECAMATAN,KELURAHAN,RW,RT')->group(function () {
+        Route::get('/resident', [ResidentController::class, 'index'])->name('resident.index');
+        Route::get('/resident/{resident}', [ResidentController::class, 'show'])->name('resident.show');
+
+        Route::get('/year', [YearController::class, 'index'])->name('year.index');
+        Route::get('/year/{year}', [YearController::class, 'show'])->name('year.show');
+        
+        Route::get('/education', [EducationController::class, 'index'])->name('education.index');
+        Route::get('/education/{education}', [EducationController::class, 'show'])->name('education.show');
+
+        Route::get('/occupation', [OccupationController::class, 'index'])->name('occupation.index');
+        Route::get('/occupation/{occupation}', [OccupationController::class, 'show'])->name('occupation.show');
+    });
+
+    // Aturan: Hanya peran tertentu (termasuk RT) yang bisa MENGELOLA (CRUD) data kependudukan
     Route::middleware('role:SUPERADMIN,KECAMATAN,RT')->group(function () {
+        Route::resource('resident', ResidentController::class)->except(['index', 'show']);
+        Route::resource('year', YearController::class)->except(['index', 'show']);
+        Route::resource('education', EducationController::class)->except(['index', 'show']);
+        Route::resource('occupation', OccupationController::class)->except(['index', 'show']);
+        
         Route::get('/resident/cetak', [ResidentController::class, 'printPDF'])->name('resident.cetak');
-        Route::resource('resident', ResidentController::class);
-
         Route::get('/year/cetak', [YearController::class, 'printPDF'])->name('year.cetak');
-        Route::resource('year', YearController::class);
-
         Route::get('/education/cetak', [EducationController::class, 'printPDF'])->name('education.cetak');
-        Route::resource('education', EducationController::class);
-
         Route::get('/occupation/cetak', [OccupationController::class, 'printPDF'])->name('occupation.cetak');
-        Route::resource('occupation', OccupationController::class);
-    });
-
-    // Aturan: KELURAHAN dan RW hanya memiliki akses lihat (read-only).
-    Route::middleware('role:KELURAHAN,RW')->group(function () {
-        Route::resource('resident', ResidentController::class)->only(['index', 'show']);
-        Route::resource('year', YearController::class)->only(['index', 'show']);
-        Route::resource('education', EducationController::class)->only(['index', 'show']);
-        Route::resource('occupation', OccupationController::class)->only(['index', 'show']);
     });
 
 
-    // --- GRUP UNTUK MENU LINGKUNGAN & BARANG ---
-    // Aturan: SUPERADMIN dan KECAMATAN memiliki akses penuh (CRUD).
-    Route::middleware('role:SUPERADMIN,KECAMATAN')->group(function () {
-        Route::get('/infrastruktur/cetak', [InfrastrukturController::class, 'printPDF'])->name('infrastruktur.cetak');
-        Route::resource('infrastruktur', InfrastrukturController::class);
-
-        Route::get('/room/cetak', [RoomController::class, 'printPDF'])->name('room.cetak');
-        Route::resource('room', RoomController::class);
-
-        Route::get('/inventaris/pdf', [InventarisController::class, 'exportPDF'])->name('inventaris.pdf');
-        Route::resource('inventaris', InventarisController::class);
-    });
-
-    // Aturan: KELURAHAN hanya memiliki akses lihat (read-only).
-    Route::middleware('role:KELURAHAN')->group(function () {
+    // --- GRUP MENU LINGKUNGAN & BARANG ---
+    // Aturan: KELURAHAN ke atas bisa MELIHAT data
+    Route::middleware('role:SUPERADMIN,KECAMATAN,KELURAHAN')->group(function () {
         Route::resource('infrastruktur', InfrastrukturController::class)->only(['index', 'show']);
         Route::resource('room', RoomController::class)->only(['index', 'show']);
         Route::resource('inventaris', InventarisController::class)->only(['index', 'show']);
     });
 
+    // Aturan: Hanya KECAMATAN ke atas yang bisa MENGELOLA (CRUD) data lingkungan
+    Route::middleware('role:SUPERADMIN,KECAMATAN')->group(function () {
+        Route::resource('infrastruktur', InfrastrukturController::class)->except(['index', 'show']);
+        Route::resource('room', RoomController::class)->except(['index', 'show']);
+        Route::resource('inventaris', InventarisController::class)->except(['index', 'show']);
 
-    // --- GRUP UNTUK MANAJEMEN AKUN ---
-    // Aturan: Hanya SUPERADMIN yang memiliki akses penuh (CRUD).
+        Route::get('/infrastruktur/cetak', [InfrastrukturController::class, 'printPDF'])->name('infrastruktur.cetak');
+        Route::get('/room/cetak', [RoomController::class, 'printPDF'])->name('room.cetak');
+        Route::get('/inventaris/pdf', [InventarisController::class, 'exportPDF'])->name('inventaris.pdf');
+    });
+
+
+    // --- GRUP MENU AKUN (Hanya SUPERADMIN) ---
     Route::middleware('role:SUPERADMIN')->group(function () {
         Route::get('/user/cetak', [UserController::class, 'printPDF'])->name('user.cetak');
         Route::resource('user', UserController::class);
     });
 
-    // --- GRUP UNTUK LAPORAN ---
-    // Aturan: Semua peran dapat mengakses laporan.
-    Route::get('/report/cetak', [ReportController::class, 'printPDF'])->name('report.cetak');
+    // --- GRUP LAPORAN (Semua bisa akses) ---
     Route::get('/report', [ReportController::class, 'index'])->name('report.index');
-
+    Route::get('/report/cetak', [ReportController::class, 'printPDF'])->name('report.cetak');
 });
+

@@ -10,7 +10,7 @@
                 <i class="fas fa-print fa-sm text-white-50"></i> Cetak PDF
             </a>
             {{-- TOMBOL TAMBAH DATA --}}
-            <a href="/resident/create" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            <a href="{{ route('resident.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
                 <i class="fas fa-plus fa-sm text-white-50"></i> Tambah
             </a>
         </div>

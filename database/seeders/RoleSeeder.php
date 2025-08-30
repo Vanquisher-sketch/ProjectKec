@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Role;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -14,21 +13,17 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        // Kosongkan tabel dulu agar tidak ada duplikasi jika dijalankan ulang
+        // Kosongkan tabel roles terlebih dahulu
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         Role::truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
-        // Biarkan database menentukan ID secara otomatis
-        // Gunakan nama dalam format UPPERCASE agar konsisten dengan UserSeeder
-
-        // 1. Peran untuk Super Admin / Developer
+        // Gunakan nama peran dalam HURUF BESAR
         Role::create(['name' => 'SUPERADMIN']);
-
-        // 2. Peran untuk hierarki wilayah
         Role::create(['name' => 'KECAMATAN']);
         Role::create(['name' => 'KELURAHAN']);
         Role::create(['name' => 'RW']);
         Role::create(['name' => 'RT']);
     }
 }
+
