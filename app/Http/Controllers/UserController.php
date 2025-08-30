@@ -17,14 +17,25 @@ class UserController extends Controller
     /**
      * Menampilkan daftar semua pengguna.
      */
-    public function index()
+    public function index(Request $request)
     {
-        // REVISI: Mengambil data user terbaru di paling atas
-        $users = User::latest()->get();
+        $search = $request->query('search');
+        // Ambil 'limit' dari URL, jika tidak ada, defaultnya adalah 10
+        $limit = $request->query('limit', 10); 
 
-        return view('pages.user.index', [
-            'users' => $users
-        ]);
+        $usersQuery = User::with('role');
+
+        if ($search) {
+            $usersQuery->where(function ($query) use ($search) {
+                $query->where('name', 'like', "%{$search}%")
+                      ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+        
+        // GANTI .get() DENGAN .paginate($limit)
+        $users = $usersQuery->orderBy('name', 'asc')->paginate($limit);
+
+        return view('pages.user.index', compact('users'));
     }
 
     /**
@@ -130,4 +141,5 @@ class UserController extends Controller
         // REVISI: Nama file laporan disesuaikan
         return $pdf->stream('laporan-data-pengguna.pdf');
     }
+    
 }

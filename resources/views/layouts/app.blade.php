@@ -23,49 +23,26 @@
 
 <body id="page-top">
 
-    <!-- Page Wrapper -->
     <div id="wrapper">
 
-        <!-- Sidebar -->
         @include('layouts.sidebar')
-        <!-- End of Sidebar -->
-
-        <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
 
-            <!-- Main Content -->
             <div id="content">
 
-                <!-- Topbar -->
                 @include('layouts.navbar')
-                <!-- End of Topbar -->
-
-                <!-- Begin Page Content -->
                 <div class="container-fluid">
                     @yield('content')
 
                 </div>
-                <!-- /.container-fluid -->
-
+                </div>
+            @include('layouts.footer')
             </div>
-            <!-- End of Main Content -->
-
-            <!-- Footer -->
-             @include('layouts.footer')
-            <!-- End of Footer -->
-
         </div>
-        <!-- End of Content Wrapper -->
-
-    </div>
-    <!-- End of Page Wrapper -->
-
-    <!-- Scroll to Top Button-->
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
 
-    <!-- Logout Modal-->
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -88,25 +65,21 @@
         </div>
     </div>
 
-    <!-- Bootstrap core JavaScript-->
     <script src="{{ asset('template/vendor/jquery/jquery.min.js')}}"></script>
     <script src="{{ asset('template/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 
-    <!-- Core plugin JavaScript-->
     <script src="{{ asset('template/vendor/jquery-easing/jquery.easing.min.js')}}"></script>
 
-    <!-- Custom scripts for all pages-->
     <script src="{{ asset('template/js/sb-admin-2.min.js')}}"></script>
 
-    <!-- Page level plugins -->
     <script src="{{ asset('template/vendor/chart.js/Chart.min.js')}}"></script>
 
-    <!-- Page level custom scripts -->
     <script src="{{ asset('template/js/demo/chart-area-demo.js')}}"></script>
     <script src="{{ asset('template/js/demo/chart-pie-demo.js')}}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+    
+    {{-- REVISI: Menambahkan @stack untuk script spesifik halaman --}}
+    @stack('scripts')
 
 </body>
-
 
 </html>

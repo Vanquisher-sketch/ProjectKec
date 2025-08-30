@@ -9,19 +9,22 @@ class DashboardController extends Controller
 {
     public function index()
     {
+       
         // DATA GRAFIK RENTANG USIA
         $dataGrafikUsia = DB::table('years')
-            ->selectRaw("
-                CASE
-                    WHEN tahun_lahir >= 2014 THEN '2014 - Sekarang'
-                    WHEN tahun_lahir BETWEEN 2009 AND 2013 THEN '2009 - 2013'
-                    ELSE 'Sebelum 2009'
-                END as rentang_usia,
-                COUNT(*) as jumlah
-            ")
-            ->groupBy('rentang_usia')
-            ->orderBy('rentang_usia', 'asc')
-            ->get();
+        ->selectRaw("
+        CASE
+            WHEN tahun_lahir BETWEEN 2020 AND 2025 THEN 'Usia 0-5 Tahun'
+            WHEN tahun_lahir BETWEEN 2008 AND 2019 THEN 'Usia 6-17 Tahun'
+            WHEN tahun_lahir BETWEEN 1966 AND 2007 THEN 'Usia 18-59 Tahun'
+            ELSE 'Usia Lansia (60+ Tahun)'
+        END as rentang_usia,
+        SUM(jumlah) as jumlah
+        ")
+        ->groupBy('rentang_usia')
+        ->orderBy('rentang_usia', 'asc')
+        ->get();
+
         $labelsUsia = $dataGrafikUsia->pluck('rentang_usia');
         $dataUsia = $dataGrafikUsia->pluck('jumlah');
 
